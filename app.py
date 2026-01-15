@@ -1,16 +1,8 @@
-import streamlit as st
+gitimport streamlit as st
 import os
-from src.config import FILES
-from src.database import initialize_databases
-from src.utils import load_profile, save_profile, get_daily_stats, load_all_databases
-from src.views import (
-    show_dashboard, show_food_log, show_hydration, show_fitness,
-    show_meal_planner, show_health_advisor, show_analytics, show_settings
-)
 
-# ==========================================
-# 1. APP CONFIGURATION
-# ==========================================
+from newback import FILES,initialize_databases,load_profile, save_profile, get_daily_stats, load_all_databases,show_ad_dashboard, show_food_log, show_hydration, show_fitness,show_meal_planner, show_health_advisor_ad, show_analytics_ad, show_settings
+
 st.set_page_config(
     page_title="FitLife Pro",
     page_icon="💪",
@@ -18,20 +10,14 @@ st.set_page_config(
     initial_sidebar_state="expanded"
 )
 
-# ==========================================
-# 2. INITIALIZATION
-# ==========================================
+
 initialize_databases()
 
 if "user" not in st.session_state:
     st.session_state["user"] = load_profile()
 user = st.session_state["user"]
 
-# ==========================================
-# 3. MAIN ROUTING
-# ==========================================
 
-# --- VIEW 1: SETUP SCREEN (If no user) ---
 if user is None:
     st.title("🚀 Welcome to FitLife Pro")
     st.markdown("### Let's build your personalized health plan.")
@@ -51,18 +37,17 @@ if user is None:
 
         if st.form_submit_button("Start My Journey"):
             if name:
-                new_profile = save_profile(name, age, gender, height, weight, act, goal, w_goal)
-                st.session_state["user"] = new_profile
-                st.rerun()
+                save_profile(name, age, gender, height, weight, act, goal, w_goal)
             else:
                 st.error("Please enter your name.")
 
-# --- VIEW 2: MAIN DASHBOARD ---
+
 else:
-    # Load Databases
+   
+
     df_food, df_ex, df_sym = load_all_databases()
 
-    # --- SIDEBAR NAVIGATION ---
+    
     with st.sidebar:
         st.title(f"👤 {user['Name']}")
         st.caption(f"Goal: {user['Goal']}")
@@ -74,7 +59,6 @@ else:
         )
 
         st.markdown("---")
-        # Sidebar Progress
         stats = get_daily_stats()
         net = stats['eaten'] - stats['burnt']
         target = user['Targets']['Calories']
@@ -82,9 +66,9 @@ else:
         st.metric("Net Calories", f"{net:.0f}", delta=f"{target - net:.0f} left")
         st.progress(min(max(net / target, 0.0), 1.0))
 
-    # --- PAGE ROUTING ---
+    
     if page == "🏠 Dashboard":
-        show_dashboard(user)
+        show_ad_dashboard(user)
     elif page == "🍎 Food Log":
         show_food_log(df_food)
     elif page == "💧 Hydration":
@@ -94,8 +78,8 @@ else:
     elif page == "🔮 Meal Planner":
         show_meal_planner(user, df_food)
     elif page == "🩺 Health Advisor":
-        show_health_advisor(df_sym)
+        show_health_advisor_ad(user,df_sym)
     elif page == "📈 Analytics":
-        show_analytics()
+        show_analytics_ad()
     elif page == "⚙️ Settings":
         show_settings(user)
