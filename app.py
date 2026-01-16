@@ -1,4 +1,4 @@
-gitimport streamlit as st
+import streamlit as st
 import os
 
 from newback import FILES,initialize_databases,load_profile, save_profile, get_daily_stats, load_all_databases,show_ad_dashboard, show_food_log, show_hydration, show_fitness,show_meal_planner, show_health_advisor_ad, show_analytics_ad, show_settings
@@ -83,3 +83,4 @@ else:
         show_analytics_ad()
     elif page == "⚙️ Settings":
         show_settings(user)
+
