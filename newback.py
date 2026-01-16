@@ -331,7 +331,7 @@ def generate_nutrition_plan():
 
         calories = data["Targets"]["Calories"]
         protein = data["Targets"]["Protein"]
-        macros_split = data["Targets"]["Macros_split"]
+        macros_split = data["Targets"]["Macros_Split"]
         carb_per,prot_per,fats_per=macros_split
 
         protein_g = (calories * prot_per / 100) / 4  
@@ -786,4 +786,5 @@ def show_meal_planner(user, df_food):
                         for m in det["Meals"]:
                             st.write(f"**{m['Type']}**: {m['Qty']} x {m['Dish']} ({m['Diet']})")
                             st.caption(f"{m['Cals']} kcal")
+
  
